@@ -38,16 +38,15 @@ app.MapPost("/p", async (IHttpClientFactory fact, HttpContext ctx, [FromQuery] s
     foreach (var hd in ctx.Request.Headers) {
         httpClient.DefaultRequestHeaders.Add(hd.Key, hd.Value.ToString());
     }
-    string url = Uri.UnescapeDataString(weburl);
     var postval = await ctx.Request.ReadFromJsonAsync<object>();
     string resmsg = "";
     try {
-        var response = await httpClient.PostAsJsonAsync(url, postval);
+        var response = await httpClient.PostAsJsonAsync(weburl, postval);
         resmsg = await response.Content.ReadAsStringAsync();
     }
     catch (Exception) {
         httpClient.DefaultRequestHeaders.Clear();
-        var response = await httpClient.PostAsJsonAsync(url, postval);
+        var response = await httpClient.PostAsJsonAsync(weburl, postval);
         resmsg = await response.Content.ReadAsStringAsync();
     }
     return Results.Ok(JsonSerializer.Deserialize<object>(resmsg));
@@ -58,16 +57,15 @@ app.MapPut("/p", async (IHttpClientFactory fact, HttpContext ctx, [FromQuery] st
     foreach (var hd in ctx.Request.Headers) {
         httpClient.DefaultRequestHeaders.Add(hd.Key, hd.Value.ToString());
     }
-    string url = Uri.UnescapeDataString(weburl);
     var postval = await ctx.Request.ReadFromJsonAsync<object>();
     string resmsg = "";
     try {
-        var response = await httpClient.PutAsJsonAsync(url, postval);
+        var response = await httpClient.PutAsJsonAsync(weburl, postval);
         resmsg = await response.Content.ReadAsStringAsync();
     }
     catch (Exception) {
         httpClient.DefaultRequestHeaders.Clear();
-        var response = await httpClient.PutAsJsonAsync(url, postval);
+        var response = await httpClient.PutAsJsonAsync(weburl, postval);
         resmsg = await response.Content.ReadAsStringAsync();
     }
     return Results.Ok(JsonSerializer.Deserialize<object>(resmsg));
@@ -78,15 +76,14 @@ app.MapDelete("/p", async (IHttpClientFactory fact, HttpContext ctx, [FromQuery]
     foreach (var hd in ctx.Request.Headers) {
         httpClient.DefaultRequestHeaders.Add(hd.Key, hd.Value.ToString());
     }
-    string url = Uri.UnescapeDataString(weburl);
     string resmsg = "";
     try {
-        var response = await httpClient.DeleteFromJsonAsync<object>(url);
+        var response = await httpClient.DeleteFromJsonAsync<object>(weburl);
         resmsg = JsonSerializer.Serialize(response);
     }
     catch {
         httpClient.DefaultRequestHeaders.Clear();
-        var response = await httpClient.DeleteFromJsonAsync<object>(url);
+        var response = await httpClient.DeleteFromJsonAsync<object>(weburl);
         resmsg = JsonSerializer.Serialize(response);
     }
     return Results.Ok(JsonSerializer.Deserialize<object>(resmsg));
