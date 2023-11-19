@@ -17,24 +17,23 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapGet("/", ()=> { return Results.Ok(new { result = "success" }); });
-app.MapGet("/{weburl}", async (IHttpClientFactory fact, HttpContext ctx, string weburl) => {
+app.MapGet("/p", async (IHttpClientFactory fact, HttpContext ctx, [FromQuery] string weburl) => {
     var httpClient = fact.CreateClient();
     foreach (var hd in ctx.Request.Headers) {
         httpClient.DefaultRequestHeaders.Add(hd.Key, hd.Value.ToString());
     }
-    string url = Uri.UnescapeDataString(weburl);
     string response = "";
     try {
-        response = await httpClient.GetStringAsync(url);
+        response = await httpClient.GetStringAsync(weburl);
     }
     catch {
         httpClient.DefaultRequestHeaders.Clear();
-        response = await httpClient.GetStringAsync(url);
+        response = await httpClient.GetStringAsync(weburl);
     }
     return Results.Ok(JsonSerializer.Deserialize<object>(response));
 });
 
-app.MapPost("/{weburl}", async (IHttpClientFactory fact, HttpContext ctx, string weburl) => {
+app.MapPost("/p", async (IHttpClientFactory fact, HttpContext ctx, [FromQuery] string weburl) => {
     var httpClient = fact.CreateClient();
     foreach (var hd in ctx.Request.Headers) {
         httpClient.DefaultRequestHeaders.Add(hd.Key, hd.Value.ToString());
@@ -54,7 +53,7 @@ app.MapPost("/{weburl}", async (IHttpClientFactory fact, HttpContext ctx, string
     return Results.Ok(JsonSerializer.Deserialize<object>(resmsg));
 });
 
-app.MapPut("/{weburl}", async (IHttpClientFactory fact, HttpContext ctx, string weburl) => {
+app.MapPut("/p", async (IHttpClientFactory fact, HttpContext ctx, [FromQuery] string weburl) => {
     var httpClient = fact.CreateClient();
     foreach (var hd in ctx.Request.Headers) {
         httpClient.DefaultRequestHeaders.Add(hd.Key, hd.Value.ToString());
@@ -74,7 +73,7 @@ app.MapPut("/{weburl}", async (IHttpClientFactory fact, HttpContext ctx, string 
     return Results.Ok(JsonSerializer.Deserialize<object>(resmsg));
 });
 
-app.MapDelete("/{weburl}", async (IHttpClientFactory fact, HttpContext ctx, string weburl) => {
+app.MapDelete("/p", async (IHttpClientFactory fact, HttpContext ctx, [FromQuery] string weburl) => {
     var httpClient = fact.CreateClient();
     foreach (var hd in ctx.Request.Headers) {
         httpClient.DefaultRequestHeaders.Add(hd.Key, hd.Value.ToString());
