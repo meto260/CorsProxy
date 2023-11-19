@@ -13,11 +13,10 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 app.UseCors(o => { o.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
-if (app.Environment.IsDevelopment()) {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
+app.MapGet("/", ()=> { return Results.Ok(new { result = "success" }); });
 app.MapGet("/{weburl}", async (IHttpClientFactory fact, HttpContext ctx, string weburl) => {
     var httpClient = fact.CreateClient();
     foreach (var hd in ctx.Request.Headers) {
